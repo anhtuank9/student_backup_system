@@ -93,7 +93,7 @@ backup_data() {
 
             git commit -m "Auto backup $BACKUP_TIME"
 
-            git push origin "$CURRENT_BRANCH" > /dev/null 2>&1
+            GIT_SSH_COMMAND="ssh -i /home/ubuntu/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" git push origin "$CURRENT_BRANCH" >> "$LOG_FILE" 2>&1
 
             if [ $? -eq 0 ]; then
                 echo "Git: Commit va push thanh cong" >> "$LOG_FILE"
