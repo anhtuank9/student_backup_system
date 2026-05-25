@@ -178,3 +178,24 @@ Ket noi Internet: Co ket noi
 Ten file backup: data_backup_2026-05-25_02-35.tar.gz
 Trang thai backup: Thanh cong
 Bonus 1: Chi giu lai 5 file backup moi nhat
+[main 89c1e09] Auto backup 2026-05-25_02-35
+ 5 files changed, 70 insertions(+), 35 deletions(-)
+ rename backups/{data_backup_2026-05-25_02-15.tar.gz => data_backup_2026-05-25_02-35.tar.gz} (100%)
+ delete mode 100644 scripts/.auto_backup.sh.swp
+To github.com:anhtuank9/student_backup_system.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'github.com:anhtuank9/student_backup_system.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+Git: Push that bai
+Thong bao: Hoan thanh backup luc 2026-05-25 02:35:01
+======================================
+Thoi gian backup: 2026-05-25 02:36:46
+Thu muc backups: Da ton tai
+Ket noi Internet: Co ket noi
+Ten file backup: data_backup_2026-05-25_02-36.tar.gz
+Trang thai backup: Thanh cong
+Bonus 1: Chi giu lai 5 file backup moi nhat
