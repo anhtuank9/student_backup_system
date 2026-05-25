@@ -1,7 +1,10 @@
 #!/bin/bash
 
+#!/bin/bash
+
 # ==============================
 # Student Backup System
+# Auto Backup + Menu + GitHub
 # ==============================
 
 PROJECT_DIR="/home/ubuntu/student_backup_system"
@@ -10,15 +13,14 @@ BACKUP_DIR="$PROJECT_DIR/backups"
 LOG_DIR="$PROJECT_DIR/logs"
 LOG_FILE="$LOG_DIR/backup.log"
 
-# Mau terminal
 GREEN="\e[32m"
 RED="\e[31m"
 YELLOW="\e[33m"
 BLUE="\e[34m"
 RESET="\e[0m"
 
-# Tao cac thu muc can thiet neu chua co
 mkdir -p "$DATA_DIR"
+mkdir -p "$BACKUP_DIR"
 mkdir -p "$LOG_DIR"
 
 backup_data() {
@@ -30,45 +32,37 @@ backup_data() {
     echo "======================================" >> "$LOG_FILE"
     echo "Thoi gian backup: $TIME_NOW" >> "$LOG_FILE"
 
-    # Kiem tra va tao thu muc backups
     if [ ! -d "$BACKUP_DIR" ]; then
         mkdir -p "$BACKUP_DIR"
-        echo -e "${YELLOW}Thu muc backups chua ton tai. Da tao moi.${RESET}"
         echo "Thu muc backups: Da tao moi" >> "$LOG_FILE"
     else
-        echo -e "${GREEN}Thu muc backups da ton tai.${RESET}"
         echo "Thu muc backups: Da ton tai" >> "$LOG_FILE"
     fi
 
-    # Kiem tra ket noi Internet
     ping -c 1 -W 2 google.com.vn > /dev/null 2>&1
 
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Co ket noi Internet.${RESET}"
         echo "Ket noi Internet: Co ket noi" >> "$LOG_FILE"
     else
-        echo -e "${RED}Khong co ket noi Internet.${RESET}"
         echo "Ket noi Internet: Khong co ket noi" >> "$LOG_FILE"
     fi
 
-    # Kiem tra thu muc data
     if [ ! -d "$DATA_DIR" ]; then
-        echo -e "${RED}Thu muc data khong ton tai.${RESET}"
-        echo "Trang thai backup: That bai - Khong co thu muc data" >> "$LOG_FILE"
+        echo "Trang thai backup: That bai - Khong tim thay thu muc data" >> "$LOG_FILE"
+        echo "Backup that bai: Khong tim thay thu muc data"
         exit 1
     fi
 
-    # Nen thu muc data
     tar -czf "$BACKUP_PATH" -C "$PROJECT_DIR" data
 
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Backup thanh cong: $BACKUP_NAME${RESET}"
         echo "Ten file backup: $BACKUP_NAME" >> "$LOG_FILE"
         echo "Trang thai backup: Thanh cong" >> "$LOG_FILE"
+        echo "Backup thanh cong: $BACKUP_NAME"
     else
-        echo -e "${RED}Backup that bai.${RESET}"
         echo "Ten file backup: $BACKUP_NAME" >> "$LOG_FILE"
         echo "Trang thai backup: That bai" >> "$LOG_FILE"
+        echo "Backup that bai"
         exit 1
     fi
 
@@ -76,7 +70,7 @@ backup_data() {
     ls -1t "$BACKUP_DIR"/data_backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
     echo "Bonus 1: Chi giu lai 5 file backup moi nhat" >> "$LOG_FILE"
 
-    # BONUS 2: Tu dong commit va push len GitHub neu da cau hinh Git
+    # BONUS 2: Tu dong commit va push len GitHub
     cd "$PROJECT_DIR"
 
     if [ -d ".git" ]; then
@@ -85,15 +79,9 @@ backup_data() {
         if git diff --cached --quiet; then
             echo "Git: Khong co thay doi moi de commit" >> "$LOG_FILE"
         else
-            CURRENT_BRANCH=$(git branch --show-current)
+            git commit -m "Auto backup $BACKUP_TIME" >> "$LOG_FILE" 2>&1
 
-            if [ -z "$CURRENT_BRANCH" ]; then
-                CURRENT_BRANCH="main"
-            fi
-
-            git commit -m "Auto backup $BACKUP_TIME"
-
-            GIT_SSH_COMMAND="ssh -i /home/ubuntu/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" git push origin "$CURRENT_BRANCH" >> "$LOG_FILE" 2>&1
+            GIT_SSH_COMMAND="ssh -i /home/ubuntu/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" git push origin main >> "$LOG_FILE" 2>&1
 
             if [ $? -eq 0 ]; then
                 echo "Git: Commit va push thanh cong" >> "$LOG_FILE"
@@ -106,17 +94,13 @@ backup_data() {
     fi
 
     # BONUS 3: Thong bao hoan thanh
-    echo -e "${BLUE}Hoan thanh backup.${RESET}"
     echo "Thong bao: Hoan thanh backup luc $TIME_NOW" >> "$LOG_FILE"
+    echo "Hoan thanh backup luc $TIME_NOW"
 }
 
 show_backups() {
     echo -e "${BLUE}===== DANH SACH BACKUP =====${RESET}"
-    ls -lh "$BACKUP_DIR" 2>/dev/null
-
-    if [ $? -ne 0 ]; then
-        echo -e "${YELLOW}Chua co file backup nao.${RESET}"
-    fi
+    ls -lh "$BACKUP_DIR"
 }
 
 show_log() {
@@ -125,7 +109,7 @@ show_log() {
     if [ -f "$LOG_FILE" ]; then
         cat "$LOG_FILE"
     else
-        echo -e "${YELLOW}Chua co file log.${RESET}"
+        echo "Chua co file log"
     fi
 }
 
@@ -155,11 +139,11 @@ show_menu() {
                 show_log
                 ;;
             4)
-                echo "Da thoat chuong trinh."
+                echo "Da thoat chuong trinh"
                 exit 0
                 ;;
             *)
-                echo -e "${RED}Lua chon khong hop le. Vui long nhap lai.${RESET}"
+                echo "Lua chon khong hop le"
                 ;;
         esac
 
@@ -167,10 +151,8 @@ show_menu() {
     done
 }
 
-# Neu cronjob goi script voi tham so backup thi chay backup truc tiep
 if [ "$1" = "backup" ]; then
     backup_data
 else
     show_menu
-fi
-
+fi     
