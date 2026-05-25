@@ -74,21 +74,32 @@ backup_data() {
     cd "$PROJECT_DIR"
 
     if [ -d ".git" ]; then
-        git add .
+        # BONUS 3: Thong bao hoan thanh
+echo "Thong bao: Hoan thanh backup luc $TIME_NOW" >> "$LOG_FILE"
+echo "Hoan thanh backup luc $TIME_NOW"
 
-        if git diff --cached --quiet; then
-            echo "Git: Khong co thay doi moi de commit" >> "$LOG_FILE"
+# BONUS 2: Tu dong commit va push len GitHub
+cd "$PROJECT_DIR"
+
+if [ -d ".git" ]; then
+    git add .
+
+    if git diff --cached --quiet; then
+        echo "Git: Khong co thay doi moi de commit" >> "$LOG_FILE"
+    else
+        git commit -m "Auto backup $BACKUP_TIME" >> "$LOG_FILE" 2>&1
+
+        GIT_SSH_COMMAND="ssh -i /home/ubuntu/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" git push origin main >> "$LOG_FILE" 2>&1
+
+        if [ $? -eq 0 ]; then
+            echo "Git: Commit va push thanh cong" >> "$LOG_FILE"
         else
-            git commit -m "Auto backup $BACKUP_TIME" >> "$LOG_FILE" 2>&1
-
-            GIT_SSH_COMMAND="ssh -i /home/ubuntu/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" git push origin main >> "$LOG_FILE" 2>&1
-
-            if [ $? -eq 0 ]; then
-                echo "Git: Commit va push thanh cong" >> "$LOG_FILE"
-            else
-                echo "Git: Push that bai" >> "$LOG_FILE"
-            fi
+            echo "Git: Push that bai" >> "$LOG_FILE"
         fi
+    fi
+else
+    echo "Git: Project chua duoc khoi tao Git repository" >> "$LOG_FILE"
+fi
     else
         echo "Git: Project chua duoc khoi tao Git repository" >> "$LOG_FILE"
     fi
