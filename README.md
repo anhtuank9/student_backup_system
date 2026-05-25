@@ -1,4 +1,32 @@
-<img width="869" height="318" alt="image" src="https://github.com/user-attachments/assets/b2a44b39-a981-4f97-8665-37f4972727d3" />
-<img width="747" height="243" alt="image" src="https://github.com/user-attachments/assets/caa49c68-c57a-47e2-b69a-cfa9341d83b4" />
-<img width="1320" height="481" alt="image" src="https://github.com/user-attachments/assets/446a9067-faad-4952-84e1-30141e20e5a0" />
-<img width="763" height="201" alt="image" src="https://github.com/user-attachments/assets/0654c101-7c34-45b2-a0d1-88b3b97038f0" />
+# Student Backup System
+
+## 1. Giới thiệu dự án
+
+`student_backup_system` là chương trình Bash Script dùng để tự động sao lưu dữ liệu trong Linux.
+
+Chương trình thực hiện các chức năng chính:
+
+- Tạo cấu trúc thư mục lưu dữ liệu, backup, log và script.
+- Tạo dữ liệu mẫu trong thư mục `data/`.
+- Nén thư mục `data/` thành file `.tar.gz`.
+- Lưu file backup vào thư mục `backups/`.
+- Ghi log quá trình backup vào `logs/backup.log`.
+- Kiểm tra kết nối Internet bằng lệnh `ping`.
+- Hiển thị menu thao tác trong terminal.
+- Tự động chạy backup bằng cronjob mỗi 5 phút.
+- Tự động commit và push dữ liệu lên GitHub.
+- Chỉ giữ lại 5 file backup mới nhất.
+- Thêm màu cho menu terminal.
+
+---
+
+## 2. Cấu trúc thư mục project
+
+Project có cấu trúc như sau:
+
+```text
+student_backup_system/
+├── data/
+├── backups/
+├── logs/
+└── scripts/
